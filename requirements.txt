@@ -1,0 +1,6 @@
+pandas
+requests
+PyYAML
+selenium
+beautifulsoup4
+streamlit
