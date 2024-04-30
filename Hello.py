@@ -11,7 +11,6 @@ import re
 from concurrent import futures
 from threading import Lock
 import time
-import streamlit_authenticator as stauth
 import yaml
 from yaml.loader import SafeLoader
 from selenium import webdriver
