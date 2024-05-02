@@ -30,7 +30,7 @@ import random
 
 class LinkedInBot:
     def __init__(self):
-        #st.image(r'C:\Users\Pc\Downloads\Athyna.jpg')
+        #st.image(r'Logo.png')
         st.write(""" # Hello Sales team!
             Hope you guys have a great day! :-)
 
@@ -73,12 +73,27 @@ class LinkedInBot:
 
     def login(self):
         with st.form(key="my_form"):
-            user_input = st.text_input("Username")
-            pass_input = st.text_input("Password", type="password")
-            message_input = st.text_input("Message", value="Hi, I came across your profile and thought it would be valuable for us to connect. Looking forward to networking with you. Best regards,")
-            start_page = st.number_input("Start Page", min_value=1, value=1, step=1)
-            end_page = st.number_input("End Page", min_value=1, value=100, step=1)
+            user_input = st.text_input("Username", help="Here you put your Linkedin email.")
+            pass_input = st.text_input("Password", type="password", help="Here you put your Linkedin password.")
+            message_input = st.text_input("Message", value="Hi, I came across your profile and thought it would be valuable for us to connect. Looking forward to networking with you. Best regards,", help="Here you put the message you wanna send. You gotta send something, cannot be empty. You can delete this paragraph as it was set as an example.")
+            start_page = st.number_input("Start Page", min_value=1, value=1, step=1, help="This is the starting page of the linkedin bot when looking for results")
+            end_page = st.number_input("End Page", min_value=1, value=100, step=1, help="This is the last page the linkedin bot will go over")
             submitted = st.form_submit_button("Login")
+        st.write(
+            """
+            Team,
+
+            Just remember that it is strongly recommended to iterate over 3 pages, e.g., 5 to 8.
+            Also, ensure that you allow the page to fully render (show all components) after you log in.
+            See the screenshot below. 
+
+            Then make an ALT + TAB. This will allow it to run in the background
+            so you do not have to stare at it until it finishes.
+
+            Have fun!
+            """
+        )
+        st.image(r'Screenshot 2024-04-30 202932.png')
 
         if submitted:
             #self.driver = uc.Chrome()
