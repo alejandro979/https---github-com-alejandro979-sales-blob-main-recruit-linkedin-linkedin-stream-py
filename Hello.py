@@ -14,6 +14,8 @@ import time
 import yaml
 from yaml.loader import SafeLoader
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -97,7 +99,7 @@ class LinkedInBot:
 
         if submitted:
             #self.driver = uc.Chrome()
-            self.driver = webdriver.Chrome()
+            self.driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             self.driver.get("https://www.linkedin.com/login/es?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin")
 
             username_field = self.driver.find_element(By.XPATH, "//input[@name='session_key']")
