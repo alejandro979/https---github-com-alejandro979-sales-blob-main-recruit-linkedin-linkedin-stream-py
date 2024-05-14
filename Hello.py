@@ -15,7 +15,7 @@ def install_chrome():
     subprocess.run(["apt-get", "install", "-y", "google-chrome-stable"], check=True)
 
 def download_chromedriver(driver_dir):
-    # ChromeDriver download URL for the latest version compatible with Chrome 124
+    # ChromeDriver download URL for the latest version compatible with Chrome 114
     download_url = "https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip"
     
     # Create driver directory if it doesn't exist

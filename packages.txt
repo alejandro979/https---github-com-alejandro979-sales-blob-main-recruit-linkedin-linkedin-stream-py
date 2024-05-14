@@ -1,7 +1,6 @@
 build-essential
 pkg-config
 default-libmysqlclient-dev
-google-chrome-stable
 unzip
 chromium
 wget
