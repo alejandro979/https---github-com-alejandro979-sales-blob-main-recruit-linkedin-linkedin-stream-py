@@ -10,8 +10,8 @@ from zipfile import ZipFile, BadZipFile
 def install_chrome():
     # Add Google Chrome's repository and install it
     st.write("Adding Google Chrome repository and installing it...")
-    subprocess.run(["wget", "-q", "-O", "-", "https://dl.google.com/linux/linux_signing_key.pub", "|", "apt-key", "add", "-"], check=True)
-    subprocess.run(["sh", "-c", 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'], check=True)
+    subprocess.run("wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -", shell=True, check=True)
+    subprocess.run('sh -c \'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list\'', shell=True, check=True)
     subprocess.run(["apt-get", "update"], check=True)
     subprocess.run(["apt-get", "install", "-y", "google-chrome-stable"], check=True)
     st.write("Google Chrome installed.")
