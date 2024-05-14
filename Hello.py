@@ -5,11 +5,11 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import requests
-from zipfile import ZipFile
+from zipfile import ZipFile, BadZipFile
 
 def download_chromedriver(driver_dir):
     # ChromeDriver download URL for the latest version compatible with Chrome 124
-    download_url = "https://chromedriver.storage.googleapis.com/124.0.6367.0/chromedriver_linux64.zip"
+    download_url = "https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip"
     
     # Create driver directory if it doesn't exist
     if not os.path.exists(driver_dir):
@@ -21,9 +21,13 @@ def download_chromedriver(driver_dir):
         response = requests.get(download_url)
         file.write(response.content)
 
-    # Extract the zip file
-    with ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(driver_dir)
+    # Verify if the downloaded file is a valid zip file
+    try:
+        with ZipFile(zip_path, 'r') as zip_ref:
+            zip_ref.extractall(driver_dir)
+    except BadZipFile:
+        st.error("The downloaded file is not a valid zip file.")
+        return None
 
     # Remove the zip file
     os.remove(zip_path)
@@ -59,5 +63,8 @@ if __name__ == "__main__":
         if not os.path.isfile(driver_path):
             st.write("Downloading ChromeDriver...")
             driver_path = download_chromedriver(driver_dir)
+            if not driver_path:
+                st.error("Failed to download or extract ChromeDriver.")
+                st.stop()
         login(driver_path)
         st.success("Driver executed successfully.")
