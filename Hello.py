@@ -9,10 +9,12 @@ from zipfile import ZipFile, BadZipFile
 
 def install_chrome():
     # Add Google Chrome's repository and install it
+    st.write("Adding Google Chrome repository and installing it...")
     subprocess.run(["wget", "-q", "-O", "-", "https://dl.google.com/linux/linux_signing_key.pub", "|", "apt-key", "add", "-"], check=True)
     subprocess.run(["sh", "-c", 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'], check=True)
     subprocess.run(["apt-get", "update"], check=True)
     subprocess.run(["apt-get", "install", "-y", "google-chrome-stable"], check=True)
+    st.write("Google Chrome installed.")
 
 def download_chromedriver(driver_dir):
     # ChromeDriver download URL for the latest version compatible with Chrome 114
@@ -70,9 +72,8 @@ def login(driver_path):
 
 if __name__ == "__main__":
     # Check if Google Chrome is installed, if not, install it
-    try:
-        subprocess.run(["google-chrome", "--version"], check=True)
-    except subprocess.CalledProcessError:
+    chrome_path = "/usr/bin/google-chrome"
+    if not os.path.exists(chrome_path):
         st.write("Installing Google Chrome...")
         install_chrome()
     
@@ -93,5 +94,6 @@ if __name__ == "__main__":
             if not driver_path:
                 st.error("Failed to download or extract ChromeDriver.")
                 st.stop()
+        os.environ['PATH'] += f":{os.path.dirname(chrome_path)}"
         login(driver_path)
         st.success("Driver executed successfully.")
