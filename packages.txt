@@ -4,3 +4,7 @@ default-libmysqlclient-dev
 google-chrome-stable
 unzip
 chromium
+wget
+gnupg
+curl
+unzip

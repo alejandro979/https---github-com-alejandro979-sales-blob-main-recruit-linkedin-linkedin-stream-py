@@ -1,11 +1,18 @@
 import os
-import time
+import subprocess
 import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 import requests
 from zipfile import ZipFile, BadZipFile
+
+def install_chrome():
+    # Add Google Chrome's repository and install it
+    subprocess.run(["wget", "-q", "-O", "-", "https://dl.google.com/linux/linux_signing_key.pub", "|", "apt-key", "add", "-"], check=True)
+    subprocess.run(["sh", "-c", 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list'], check=True)
+    subprocess.run(["apt-get", "update"], check=True)
+    subprocess.run(["apt-get", "install", "-y", "google-chrome-stable"], check=True)
 
 def download_chromedriver(driver_dir):
     # ChromeDriver download URL for the latest version compatible with Chrome 124
@@ -17,8 +24,15 @@ def download_chromedriver(driver_dir):
 
     # Download the ChromeDriver zip file
     zip_path = os.path.join(driver_dir, 'chromedriver.zip')
+    st.write(f"Downloading ChromeDriver from {download_url}")
+    response = requests.get(download_url)
+
+    # Check if the response is valid
+    if response.status_code != 200:
+        st.error("Failed to download ChromeDriver.")
+        return None
+
     with open(zip_path, 'wb') as file:
-        response = requests.get(download_url)
         file.write(response.content)
 
     # Verify if the downloaded file is a valid zip file
@@ -32,8 +46,14 @@ def download_chromedriver(driver_dir):
     # Remove the zip file
     os.remove(zip_path)
 
+    # Check if chromedriver executable exists
+    driver_path = os.path.join(driver_dir, 'chromedriver')
+    if not os.path.isfile(driver_path):
+        st.error("ChromeDriver executable not found after extraction.")
+        return None
+
     # Return the path to the chromedriver executable
-    return os.path.join(driver_dir, 'chromedriver')
+    return driver_path
 
 def login(driver_path):
     options = Options()
@@ -49,6 +69,13 @@ def login(driver_path):
     driver.quit()
 
 if __name__ == "__main__":
+    # Check if Google Chrome is installed, if not, install it
+    try:
+        subprocess.run(["google-chrome", "--version"], check=True)
+    except subprocess.CalledProcessError:
+        st.write("Installing Google Chrome...")
+        install_chrome()
+    
     with st.form(key="my_form"):
         user_input = st.text_input("Username", help="Here you put your LinkedIn email.")
         pass_input = st.text_input("Password", type="password", help="Here you put your LinkedIn password.")
